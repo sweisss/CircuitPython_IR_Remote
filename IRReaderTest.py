@@ -4,7 +4,8 @@ import pulseio
 import board
 import adafruit_irremote
 import array
-from adafruit_circuitplayground import cp
+from adafruit_circuitplayground.express import cpx
+import time
 
 pulsein = pulseio.PulseIn(board.REMOTEIN, maxlen=120, idle_state=True)
 pulseout = pulseio.PulseOut(board.REMOTEOUT, frequency=38000, duty_cycle=2**15)
@@ -12,10 +13,14 @@ decoder = adafruit_irremote.GenericDecode()
 
 # transmitter = adafruit_irremote.GenericTransmit()
 
-
 while True:
-    if cp.button_a:
+    if cpx.button_a:
         print("Button A is pressed")
+        time.sleep(0.5)
+    if cpx.button_b:
+        print("Button B is pressed")
+        time.sleep(0.5)
+        """
     pulses = decoder.read_pulses(pulsein)
     if len(pulses) == 67:
         print("Heard", len(pulses), "Pulses:", pulses)
@@ -38,4 +43,4 @@ while True:
                 #print("Exception: ", type(e), e.args)
             # print("Reason:", e.args[0][1])
         print("----------------------------")
-
+"""
