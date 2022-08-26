@@ -4,33 +4,38 @@ import pulseio
 import board
 import adafruit_irremote
 import array
+from adafruit_circuitplayground import cp
 
 pulsein = pulseio.PulseIn(board.REMOTEIN, maxlen=120, idle_state=True)
-pulseout = pulseio.PulseOut(board.REMOTEOUT)
+pulseout = pulseio.PulseOut(board.REMOTEOUT, frequency=38000, duty_cycle=2**15)
 decoder = adafruit_irremote.GenericDecode()
 
 # transmitter = adafruit_irremote.GenericTransmit()
 
 
 while True:
+    if cp.button_a:
+        print("Button A is pressed")
     pulses = decoder.read_pulses(pulsein)
-    print("Heard", len(pulses), "Pulses:", pulses)
-    try:
-        code = decoder.decode_bits(pulses)
-        print("Decoded:", code)
-        # on_command from https://www.youtube.com/watch?v=TIbp7DzfOBM
-        # probably not neccessary, probably doing the same as decoder
-        on_command = array.array('H', [pulses[x] for x in range(len(pulses))])
-        print(on_command)
-#        if board.BUTTON_A:
-#           pulseout.send(pulses)
-    except adafruit_irremote.IRNECRepeatException:  # unusual short code!
-        print("NEC repeat!")
-    except adafruit_irremote.IRDecodeException as e:     # failed to decode
-        print("Failed to decode: ", e.args)
-#    except Exception as e:
-#        print("Exception: ", type(e), e.args)
-
-    print("----------------------------")
-
+    if len(pulses) == 67:
+        print("Heard", len(pulses), "Pulses:", pulses)
+        try:
+            code = decoder.decode_bits(pulses)
+            print("Decoded:", code)
+            # on_command from https://www.youtube.com/watch?v=TIbp7DzfOBM
+            # probably not neccessary, probably doing the same as decoder
+            on_command = array.array('H', [pulses[x] for x in range(len(pulses))])
+            print(on_command)
+            #if cpx.button_a:
+                #print("Button A is pressed")
+                #pulseout.send(on_command)
+        except adafruit_irremote.IRNECRepeatException:  # unusual short code!
+            print("NEC repeat!")
+        except adafruit_irremote.IRDecodeException as e:     # failed to decode
+            print("Failed to decode: ", e.args)
+        #except Exception as e:
+            #if e.args[0][1] != 'Too short':
+                #print("Exception: ", type(e), e.args)
+            # print("Reason:", e.args[0][1])
+        print("----------------------------")
 
