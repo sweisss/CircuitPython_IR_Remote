@@ -11,17 +11,19 @@ pulsein = pulseio.PulseIn(board.REMOTEIN, maxlen=120, idle_state=True)
 pulseout = pulseio.PulseOut(board.REMOTEOUT, frequency=38000, duty_cycle=2**15)
 decoder = adafruit_irremote.GenericDecode()
 
+on_command = array.array('H', [4523, 4483, 573, 1664, 571, 1666, 569, 1668, 567, 551, 566, 552, 565, 554, 564, 556, 573, 545, 572, 1666, 570, 1667, 568, 1669, 566, 552, 565, 554, 563, 554, 573, 545, 572, 546, 572, 1665, 569, 1668, 568, 1670, 566, 553, 596, 522, 595, 524, 594, 525, 593, 526, 571, 548, 569, 549, 569, 550, 598, 1639, 628, 1608, 595, 1643, 592, 1645, 601, 1636, 599])
 # transmitter = adafruit_irremote.GenericTransmit()
 
 while True:
     if cpx.button_a:
         print("Button A is pressed")
+        pulseout.send(on_command)
         time.sleep(0.5)
     if cpx.button_b:
         print("Button B is pressed")
         time.sleep(0.5)
-        """
-    pulses = decoder.read_pulses(pulsein)
+   # pulses = decoder.read_pulses(pulsein)
+    """
     if len(pulses) == 67:
         print("Heard", len(pulses), "Pulses:", pulses)
         try:
